@@ -2,8 +2,8 @@ local classes = setmetatable({}, {__mode = "k"})
 local objects = setmetatable({}, {__mode = "k"})
 
 local function makeAbstract(self, name)
-  self[name] = function(self)
-    error(("attempt to call abstract %s:%s"):format(self.classname, name), 2)
+  self[name] = function(class)
+    error(("attempt to call abstract %s:%s"):format(class.classname, name), 2)
   end
 end
 
