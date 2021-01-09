@@ -48,7 +48,9 @@ end
 
 local function isExactOrBase(a, b)
   local base = classOf(a)
-  if not base then return true end
+  if not base then
+    return true
+  end
   local derived = classOf(b)
   while derived do
     if rawequal(derived, base) then
@@ -61,7 +63,9 @@ end
 
 local function isBase(a, b)
   local base = classOf(a)
-  if not base then return true end
+  if not base then
+    return true
+  end
   local derived = classOf(b)
   while derived do
     derived = derived.baseclass
