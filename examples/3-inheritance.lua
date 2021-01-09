@@ -82,7 +82,7 @@ print(class.isObject(42)) --> false
 
 -- to turning anything into a class (or nil), the "class.of" function can be used
 
-print("class.of")
+print("class.of()")
 print(class.of(TAnimal).classname) --> TAnimal
 print(class.of(TAnimal()).classname) --> TAnimal
 print(class.of(42)) --> nil
