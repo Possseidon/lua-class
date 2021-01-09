@@ -1,6 +1,12 @@
 local classes = setmetatable({}, {__mode = "k"})
 local objects = setmetatable({}, {__mode = "k"})
 
+local function makeAbstract(self, name)
+  self[name] = function(self)
+    error(("attempt to call abstract %s:%s"):format(self.classname, name), 2)
+  end
+end
+
 local function newObject(self, ...)
   local object = {
     class = self
@@ -102,7 +108,8 @@ local function newClass(_, classname, baseclass)
   local class = setmetatable({
     baseclass = baseclass,
     classname = classname,
-    metatable = metatable
+    metatable = metatable,
+    makeAbstract = makeAbstract
   }, {
     __name = classname or "class",
     __call = newObject,
@@ -156,15 +163,10 @@ local function isObject(object)
   return objects[object] or false
 end
 
-local function abstract()
-  error("attempt to call an abstract function", 2)
-end
-
 return setmetatable({
   isClass = isClass,
   isObject = isObject,
-  of = classOf,
-  abstract = abstract
+  of = classOf
 }, {
   __call = newClass
 })
