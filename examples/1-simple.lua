@@ -1,21 +1,21 @@
 -- require the class library
 local class = require "class"
 
--- create a new class TValue
-local TValue = class("TValue")
+-- create a new class Value
+local Value = class("Value")
 
 -- add a some member functions using ":" and "self"
-function TValue:get()
+function Value:get()
   return self._value
 end
 
 -- of course, ":" is just syntacic sugar and this also works:
-function TValue.set(self, value)
+function Value.set(self, value)
   self._value = value
 end
 
 -- create an instance
-local value = TValue()
+local value = Value()
 
 -- ...and use it!
 value:set("Hello World!")

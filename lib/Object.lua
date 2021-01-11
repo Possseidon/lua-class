@@ -1,10 +1,10 @@
 local class = require "class"
 
-local TObject = class("TObject")
+local Object = class("Object")
 
-TObject.properties = {}
+Object.properties = {}
 
-function TObject:inherit(base)
+function Object:inherit(base)
   local properties = setmetatable({}, {
     __index = function(t, k)
       local prop = {}
@@ -20,7 +20,7 @@ function TObject:inherit(base)
   self.properties = properties
 end
 
-function TObject.metatable:index(key)
+function Object.metatable:index(key)
   local property = rawget(self.properties, key)
   if property then
     local get = property.get
@@ -31,7 +31,7 @@ function TObject.metatable:index(key)
   end
 end
 
-function TObject.metatable:__newindex(key, value)
+function Object.metatable:__newindex(key, value)
   local property = rawget(self.properties, key)
   if property then
     local set = property.set
@@ -52,7 +52,7 @@ end
 
 -- Adds a read-only property for a field
 -- The data field name defaults to "_<name>"
-function TObject:addReadonly(name, field)
+function Object:addReadonly(name, field)
   local properties = getProperties(self)
   field = field or ("_" .. name)
   properties[name].get = function(self)
@@ -62,7 +62,7 @@ end
 
 -- Adds an event property which uses the setter to add a new handler
 -- The event field name defaults to "_<name>"
-function TObject:addEvent(name, field)
+function Object:addEvent(name, field)
   local properties = getProperties(self)
   field = field or ("_" .. name)
   properties[name].get = function(object)
@@ -76,7 +76,7 @@ end
 -- Adds a property for a field with an optional event handler
 -- The data field name defaults to "_<name>"
 -- The event field name defaults to "_on<Name>Change" (name is capitalized)
-function TObject:addProperty(name, field, event)
+function Object:addProperty(name, field, event)
   local properties = getProperties(self)
   field = field or ("_" .. name)
   event = event or ("_on" .. name:gsub("^%l", string.upper) .. "Change")
@@ -92,4 +92,4 @@ function TObject:addProperty(name, field, event)
   end
 end
 
-return TObject
+return Object

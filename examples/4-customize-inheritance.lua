@@ -1,22 +1,22 @@
 local class = require "class"
 
-local TBase = class("TBase")
+local Base = class("Base")
 
 -- it is possible to customize the inheritance process
-function TBase:inherit(base)
+function Base:inherit(base)
   -- "self" is the class that inherits
   -- "base" its direct base class
   print(self.classname .. " inherits " .. base.classname)
-  -- e.g. TObject uses this to copy over all properties
+  -- e.g. Object uses this to copy over all properties
 end
 
-local TDerived = class("TDerived", TBase) --> TDerived inherits TBase
+local Derived = class("Derived", Base) --> Derived inherits Base
 
-class("TDoubleDerived", TDerived) --> TDoubleDerived inherits TDerived
+class("DoubleDerived", Derived) --> DoubleDerived inherits Derived
 
 -- can be overridden like any other method
-function TDerived:inherit(base)
+function Derived:inherit(base)
   print("I'm different!")
 end
 
-class("TDifferentDerived", TDerived) --> I'm different!
+class("DifferentDerived", Derived) --> I'm different!
