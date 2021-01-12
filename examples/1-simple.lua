@@ -9,8 +9,7 @@ function Value:get()
   return self._value
 end
 
--- of course, ":" is just syntacic sugar and this also works:
-function Value.set(self, value)
+function Value:set(value)
   self._value = value
 end
 
