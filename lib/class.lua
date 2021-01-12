@@ -9,10 +9,7 @@ local function newObject(self, ...)
   local object = {}
   setmetatable(object, self.metatable)
   objects[object] = true
-  local create = object.create
-  if create then
-    create(object, ...)
-  end
+  object:create(...)
   return object
 end
 
@@ -158,12 +155,29 @@ local function newClass(_, classname, baseclass)
 
   class.class = class
   classes[class] = true
+
   if baseclass then
-    local inherit = baseclass.inherit
-    if inherit then
-      inherit(class, baseclass)
+    baseclass:inherit(class)
+  else
+    ---Initializes an object.
+    function class:create() end
+
+    ---Called when a class is inherited from.
+    ---@param base class
+    function class:inherit(base) end
+
+    ---Can be used in member functions to emulate abstract functions.
+    ---```lua
+    --- function Test:func()
+    ---   self:abstract()
+    --- end
+    ---```
+    function class:abstract()
+      local name = classOf(class).classname
+      error("attempt to call abstract function on instance of " .. name, 2)
     end
   end
+
   return class, baseclass
 end
 
