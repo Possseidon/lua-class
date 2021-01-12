@@ -98,7 +98,7 @@ local function newClass(_, classname, baseclass)
     metatable = metatable,
     makeAbstract = makeAbstract
   }, {
-    __name = classname or "class",
+    __name = classname,
     __call = newObject,
     __index = baseclass,
     __eq = isExact,
@@ -113,7 +113,7 @@ local function newClass(_, classname, baseclass)
     end
   end
   metatable.__metatable = false
-  metatable.__name = classname and classname .. "()" or "object"
+  metatable.__name = classname .. "()"
 
   local old = metatable.__index
   metatable.__index = class
