@@ -1,9 +1,13 @@
 local class = require "class"
 
+---@class Object: class
+---@type fun(): Object
 local Object = class("Object")
 
 Object.properties = {}
 
+---Copies over existing properties in the base class into the new class.
+---@param base Object
 function Object:inherit(base)
   local properties = setmetatable({}, {
     __index = function(t, k)
@@ -20,6 +24,9 @@ function Object:inherit(base)
   self.properties = properties
 end
 
+---Deals with property getters.
+---@param key string
+---@return any
 function Object.metatable:index(key)
   local property = rawget(self.properties, key)
   if property then
@@ -31,6 +38,9 @@ function Object.metatable:index(key)
   end
 end
 
+---Deals with property setters.
+---@param key string
+---@param value any
 function Object.metatable:__newindex(key, value)
   local property = rawget(self.properties, key)
   if property then
@@ -45,13 +55,16 @@ function Object.metatable:__newindex(key, value)
   end
 end
 
+---Returns the properties table of the class or object.
+---@return table properties
 local function getProperties(self)
   assert(class.isClass(self), "properties are class specific")
   return self.properties
 end
 
--- Adds a read-only property for a field
--- The data field name defaults to "_<name>"
+---Adds a read-only property for a field.
+---@param name string The name of the property.
+---@param field? string The name of the backing field; defaults to `_<name>`.
 function Object:addReadonly(name, field)
   local properties = getProperties(self)
   field = field or ("_" .. name)
@@ -60,8 +73,9 @@ function Object:addReadonly(name, field)
   end
 end
 
--- Adds an event property which uses the setter to add a new handler
--- The event field name defaults to "_<name>"
+---Adds an Event property which uses the setter to add a new handler
+---@param name string The name of the Event property.
+---@param field? string The name of the backing field; defaults to `_<name>`.
 function Object:addEvent(name, field)
   local properties = getProperties(self)
   field = field or ("_" .. name)
@@ -73,9 +87,10 @@ function Object:addEvent(name, field)
   end
 end
 
--- Adds a property for a field with an optional event handler
--- The data field name defaults to "_<name>"
--- The event field name defaults to "_on<Name>Change" (name is capitalized)
+---Adds a property for a field with an optional event handler.
+---@param name string The name of the property.
+---@param field? string The name of the backing field; defaults to `_<name>`.
+---@param event? string The name of the event; defaults to `_on<Name>Change`.
 function Object:addProperty(name, field, event)
   local properties = getProperties(self)
   field = field or ("_" .. name)
