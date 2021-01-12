@@ -11,23 +11,6 @@ local function newObject(self, ...)
   local object = {
     class = self
   }
-  object.inherited = setmetatable({
-    metatable = setmetatable({}, {
-      __index = function(_, name)
-        return function(...)
-          return self.baseclass.metatable[name](object, ...)
-        end
-      end,
-      __metatable = false
-    })
-  }, {
-    __index = function(_, name)
-      return function(...)
-        return self.baseclass[name](object, ...)
-      end
-    end,
-    __metatable = false
-  })
   setmetatable(object, self.metatable)
   objects[object] = true
   local create = object.create
@@ -156,7 +139,7 @@ local function newClass(_, classname, baseclass)
       inherit(class, baseclass)
     end
   end
-  return class
+  return class, baseclass
 end
 
 local function isClass(class)

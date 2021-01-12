@@ -82,7 +82,7 @@ I generally put each class in its own file and name the file accordingly, simila
 
 - Creating a base class `Animal` and a subclass `Cat`.
 - Virtual and abstract methods.
-- Calling base methods in a derived method using `self.inherited`.
+- Calling base methods in a derived method.
 - Checking if something is a class or an object using `class.isClass()` and `class.isObject()`.
 - Safely turning any value into its class (or `nil`) using `class.of()`.
 - Checking the inheritance hierachy of classes and objects using the comparison operators.

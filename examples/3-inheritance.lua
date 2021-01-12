@@ -29,20 +29,19 @@ print(err) --> [...]: attempt to call abstract Animal:speak
 ---- Creating a subclass Cat, overriding existing methods
 
 -- inheritance can be achieved by simply passing the base class as a second parameter
+-- additionally, the base class is also returned and captured in a variable "super"
+-- this way the base class can be referenced without mentioning it explicitly
 -- multiple inheritance is NOT supported currently, but may be introduced at some point
-local Cat = class("Cat", Animal)
+local Cat, super = class("Cat", Animal)
 
 -- overriding the existing constructor
 function Cat:create(...)
-  -- using the self.inherited wrapper, the base constructor can be called
-  -- note that self is automatically forwarded, despite not using the ":" method call syntax
-  self.inherited.create(...)
-  -- this is basically equivalent to
-  self.baseclass.create(self, ...)
-  -- or simply using the base class directly
-  Animal.create(self, ...)
-  -- however care has to be taken, if the base class changes at some point
-  -- ... which is precisely, why the self.inherited wrapper exists
+  -- usually we also want to call the constructor of the base class
+  -- the "super" defined above comes in handy here
+  super.create(self, ...)
+  -- WARNING --
+  -- using self.baseclass instead, will always be the immediate base class of the instance
+  -- the moment a third layer is introduced into the class hierachy, this will cause infinite recursion
 
   self._legs = 4
 end
@@ -50,7 +49,7 @@ end
 -- overriding the virtual move function
 function Cat:move()
   -- again, calling the base move first
-  self.inherited.move()
+  super.move(self)
   print("to be exact, " .. self._name .. " walks on all fours")
 end
 
