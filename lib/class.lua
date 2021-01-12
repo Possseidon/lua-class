@@ -1,9 +1,18 @@
+---@class class
+---@field class class
+---@field baseclass class
+---@field classname string
+---@field metatable table
+---@field makeAbstract fun(name: string)
+---@field create function
+---@field inherit function
+
 local classes = setmetatable({}, {__mode = "k"})
 local objects = setmetatable({}, {__mode = "k"})
 
 ---Creates an abstract function with the given name that always throws.
----@param self class The class to create the abstract function for.
----@param name string The name ofthe abstract function.
+---@param self class
+---@param name string
 local function makeAbstract(self, name)
   self[name] = function(class)
     error(("attempt to call abstract %s:%s"):format(class.classname, name), 2)
@@ -12,10 +21,9 @@ end
 
 ---Creates a new instance of a class.
 ---@param self class
----@vararg any Forwarded to the constructor `create`.
----@return object
+---@vararg any
+---@return class
 local function newObject(self, ...)
-  ---@class object: class
   local object = {}
   setmetatable(object, self.metatable)
   objects[object] = true
@@ -27,25 +35,25 @@ local function newObject(self, ...)
 end
 
 ---Returns the class of an instance, forwards classes and otherwise returns `nil`.
----@param entity any The entity to get the class of.
----@return class class The related class of the entity.
+---@param entity any
+---@return class?
 local function classOf(entity)
   return classes[entity] and entity or
     objects[entity] and entity.class
 end
 
 ---Checks, if two entities have the exact same class type using `class.of` on both operands.
----@param a any The first entity.
----@param b any The second entity.
----@return boolean result Wether the entities class types are identical.
+---@param a any
+---@param b any
+---@return boolean
 local function isExact(a, b)
   return rawequal(classOf(a), classOf(b))
 end
 
 ---Checks, if the second parameter matches or derives from the first parameter.
----@param a any The base entity.
----@param b any The matching or derived entity.
----@return boolean result Wether `b` matches or derives from `a`.
+---@param a any
+---@param b any
+---@return boolean
 local function isExactOrBase(a, b)
   local base = classOf(a)
   if not base then
@@ -62,9 +70,9 @@ local function isExactOrBase(a, b)
 end
 
 ---Checks, if the second parameter derives from the first parameter.
----@param a any The base entity.
----@param b any The derived entity.
----@return boolean result Wether `b` derives from `a`.
+---@param a any
+---@param b any
+---@return boolean
 local function isBase(a, b)
   local base = classOf(a)
   if not base then
@@ -82,8 +90,8 @@ end
 
 ---Adds a new __index handler to the given metatable.
 ---Only if the previous __index handler returns `nil`, this new handler is used.
----@param metatable table The metatable to modify.
----@param index table|function The new index handler table or function.
+---@param metatable table
+---@param index table|function
 local function addIndexHandler(metatable, index)
   local oldIndex = metatable.__index
   if not oldIndex then
@@ -116,20 +124,13 @@ local function addIndexHandler(metatable, index)
 end
 
 ---Returns a new class with the given name and optional base class.
----@param classname string The name of the new class.
----@param baseclass? class The base class to inherit this new class.
----@return class class The newly created class.
----@return class super The base class allowing for convenient "super" calls.
+---@param classname string
+---@param baseclass? any
+---@return class class
+---@return class? super
 local function newClass(_, classname, baseclass)
   local metatable = {}
 
-  ---@class class
-  ---@field baseclass class
-  ---@field classname string
-  ---@field metatable table
-  ---@field makeAbstract function
-  ---@field create function
-  ---@field inherit function
   local class = setmetatable({
     baseclass = baseclass,
     classname = classname,
@@ -181,23 +182,28 @@ local function newClass(_, classname, baseclass)
 end
 
 ---Checks if the given thing is any class.
----@param class any The thing to check.
----@return boolean result `true` if `class` is a class, otherwise `false`.
+---@param class any
+---@return boolean
 local function isClass(class)
   return classes[class] or false
 end
 
 ---Checks if the given thing is any object.
----@param object any The thing to check.
----@return boolean result `true` if `object` is an object, otherwise `false`.
+---@param object any
+---@return boolean
 local function isObject(object)
   return objects[object] or false
 end
 
-return setmetatable({
+---The class library.
+---@class class*
+---@type fun(name: string, base?: class)
+local class = setmetatable({
   isClass = isClass,
   isObject = isObject,
   of = classOf
 }, {
   __call = newClass
 })
+
+return class
