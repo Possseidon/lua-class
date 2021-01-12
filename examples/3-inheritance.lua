@@ -16,7 +16,9 @@ function Animal:move()
 end
 
 -- Calling Animal:speak() will raise an error.
-Animal:makeAbstract "speak"
+function Animal:speak()
+  self:abstract()
+end
 
 local animal = Animal("Peter")
 animal:move() --> Peter moves
@@ -25,7 +27,7 @@ local _, err = pcall(function()
   animal:speak() --> abstract call error, see below
 end)
 
-print(err) --> [...]: attempt to call abstract Animal:speak
+print(err) --> [...]: attempt to call abstract function on Animal
 
 ---- Creating a subclass Cat, overriding existing methods
 

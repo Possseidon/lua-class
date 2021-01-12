@@ -1,23 +1,5 @@
----@class class
----@field class class
----@field baseclass class
----@field classname string
----@field metatable table
----@field makeAbstract fun(name: string)
----@field create function
----@field inherit function
-
 local classes = setmetatable({}, {__mode = "k"})
 local objects = setmetatable({}, {__mode = "k"})
-
----Creates an abstract function with the given name that always throws.
----@param self class
----@param name string
-local function makeAbstract(self, name)
-  self[name] = function(class)
-    error(("attempt to call abstract %s:%s"):format(class.classname, name), 2)
-  end
-end
 
 ---Creates a new instance of a class.
 ---@param self class
@@ -131,11 +113,15 @@ end
 local function newClass(_, classname, baseclass)
   local metatable = {}
 
+  ---@class class
+  ---@field class class
+  ---@field baseclass class
+  ---@field classname string
+  ---@field metatable table
   local class = setmetatable({
     baseclass = baseclass,
     classname = classname,
-    metatable = metatable,
-    makeAbstract = makeAbstract
+    metatable = metatable
   }, {
     __name = classname,
     __call = newObject,
