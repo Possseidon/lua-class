@@ -16,10 +16,7 @@ end
 ---@return object
 local function newObject(self, ...)
   ---@class object: class
-  ---@field class class
-  local object = {
-    class = self
-  }
+  local object = {}
   setmetatable(object, self.metatable)
   objects[object] = true
   local create = object.create
