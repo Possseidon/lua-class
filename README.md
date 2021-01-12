@@ -11,7 +11,7 @@ Personally I use PascalCase for my class names, which is fairly common in other 
 ```lua
 local class = require "class"
 
--- Creating the class
+-- Creating the class:
 
 local Value = class("Value")
 
@@ -27,7 +27,7 @@ function Value:set(value)
   self._value = value
 end
 
--- Creating an instance
+-- Creating an instance:
 
 local value = Value("Hello World!")
 
