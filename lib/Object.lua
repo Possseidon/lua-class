@@ -6,22 +6,24 @@ local Object = class("Object")
 
 Object.properties = {}
 
----Copies over existing properties in the base class into the new class.
----@param base Object
-function Object:inherit(base)
+---Copies over existing properties in the base class into the derived class.
+---Properties are copied over to simplify overriding their behavior.
+---@param derived Object
+function Object:inherit(derived)
   local properties = setmetatable({}, {
-    __index = function(t, k)
-      local prop = {}
-      t[k] = prop
-      return prop
+    __index = function(object, name)
+      local property = {}
+      object[name] = property
+      return property
     end
   })
-  if base then
-    for k, v in pairs(base.properties) do
-      properties[k] = v
-    end
+  for name, property in pairs(self.properties) do
+    properties[name] = {
+      get = property.get,
+      set = property.set
+    }
   end
-  self.properties = properties
+  derived.properties = properties
 end
 
 ---Deals with property getters.
