@@ -89,7 +89,7 @@ function Object:addEvent(name, field)
   end
 end
 
----Adds a property for a field with an optional event handler.
+---Adds a property for a field with an event handler.
 ---@param name string The name of the property.
 ---@param field? string The name of the backing field; defaults to `_<name>`.
 ---@param event? string The name of the event; defaults to `_on<Name>Change`.
